@@ -28,7 +28,7 @@ dice_skill = AgentSkill(
 _base_url = os.environ.get("AGENT_BASE_URL")
 
 public_agent_card = AgentCard(
-    name="Hello A2A (OAuth)",
+    name="Hello A2A OAuth",
     description="Simple agent with a public hello skill and an OAuth-authenticated dice-rolling skill.",
     url=_base_url,
     iconUrl="https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/png/128/emoji_u1f44b.png",
@@ -42,7 +42,7 @@ public_agent_card = AgentCard(
 
 extended_agent_card = public_agent_card.model_copy(
     update={
-        "name": "Hello A2A (OAuth)",
+        "name": "Hello A2A OAuth (Authenticated)",
         "description": "Full-featured agent including the dice-rolling skill.",
         "version": "1.0.0",
         "skills": [hello_skill, dice_skill],
