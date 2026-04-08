@@ -36,7 +36,7 @@ class HelloAgentExecutor(AgentExecutor):
             return
         
         if user_text.startswith("roll"):
-            auth_header: str = (context.request_metadata or {}).get("authorization", "")
+            auth_header: str = (context.metadata or {}).get("authorization", "")
             token = auth_header.removeprefix("Bearer ").strip()
 
             if not token or token != _VALID_TOKEN:
