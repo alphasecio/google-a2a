@@ -18,12 +18,6 @@ def roll_dice(n_dice: int) -> List[int]:
     """Rolls n_dice 6-sided dice and returns the results."""
     return [random.randint(1, 6) for _ in range(n_dice)]
 
-def _get_valid_token() -> str:
-    token = os.environ.get("AGENT_API_TOKEN")
-    if not token:
-        raise RuntimeError("AGENT_API_TOKEN environment variable is not set.")
-    return token
-
 class HelloAgentExecutor(AgentExecutor):
     """Public hello skill + authenticated roll_dice skill (API token auth)."""
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
