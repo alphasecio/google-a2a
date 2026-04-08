@@ -21,6 +21,12 @@ st.set_page_config(page_title="A2A Chatbot", page_icon="💬", initial_sidebar_s
 
 def extract_text(resp) -> str:
     try:
+        error = resp.root.error
+        if error:
+            return f"⚠️ Server error: {error.message}"
+    except Exception:
+        pass
+    try:
         for part in resp.root.result.parts:
             root = getattr(part, "root", part)
             if hasattr(root, "text"):
@@ -87,6 +93,8 @@ if "extended_card" not in st.session_state:
     st.session_state.extended_card = None
 if "active_token" not in st.session_state:
     st.session_state.active_token = None
+if "last_auth_method" not in st.session_state:
+    st.session_state.last_auth_method = "None"
 
 with st.sidebar:
     st.title("💬 A2A Chatbot")
@@ -101,6 +109,16 @@ with st.sidebar:
             "Authentication Method",
             ["None", "API Token", "OAuth 2.0"],
         )
+
+        # Disconnect if auth method changes while connected
+        if auth_method != st.session_state.last_auth_method:
+            st.session_state.last_auth_method = auth_method
+            if st.session_state.connected:
+                st.session_state.connected = False
+                st.session_state.agent_card = None
+                st.session_state.extended_card = None
+                st.session_state.active_token = None
+                st.session_state.messages = []
         
         # API Token fields
         if auth_method == "API Token":
