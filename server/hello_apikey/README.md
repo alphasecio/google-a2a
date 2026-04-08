@@ -25,10 +25,20 @@ Agent card: `http://localhost:8080/.well-known/agent.json`
 2. Add environment variables (see below)
 3. Railway detects the `Dockerfile` and builds automatically
 
+## Deploy to [Cloud Run](https://cloud.google.com/run)
+ 
+```bash
+gcloud run deploy hello-apikey \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars AGENT_BASE_URL=https://your-service-url,AGENT_API_TOKEN=your-secret-token
+```
+
 ## Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `AGENT_BASE_URL` | Yes | Public URL of this server (used in agent card) |
 | `AGENT_API_TOKEN` | Yes | Static Bearer token for authenticated skills |
-| `PORT` | No | Port to listen on (default: `8080`, injected automatically by Railway) |
+| `PORT` | No | Port to listen on (default: `8080`, injected automatically by Cloud Run/Railway) |
