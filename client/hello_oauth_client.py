@@ -21,6 +21,7 @@ OAUTH_ISSUER = os.environ.get("OAUTH_ISSUER")
 OAUTH_AUDIENCE = os.environ.get("OAUTH_AUDIENCE")
 OAUTH_CLIENT_ID = os.environ.get("OAUTH_CLIENT_ID")
 OAUTH_CLIENT_SECRET = os.environ.get("OAUTH_CLIENT_SECRET")
+OAUTH_SCOPE = os.environ.get("OAUTH_SCOPE")
 
 missing = [k for k, v in {
     "AGENT_BASE_URL": AGENT_BASE_URL,
@@ -62,7 +63,7 @@ async def fetch_oauth_token() -> str:
                 "grant_type": "client_credentials",
                 "client_id": OAUTH_CLIENT_ID,
                 "client_secret": OAUTH_CLIENT_SECRET,
-                "scope": f"{OAUTH_AUDIENCE}/.default",
+                "scope": OAUTH_SCOPE if OAUTH_SCOPE else f"{audience}/.default",
             },
         )
         if not resp.is_success:
