@@ -50,9 +50,9 @@ def extract_text(resp) -> str:
 
 async def fetch_oauth_token() -> str:
     """Fetches an access token via OAuth 2.0 client credentials flow using OIDC discovery."""
-    issuer = OAUTH_ISSUER.rstrip("/")
+    discovery_url = issuer.rstrip("/") + "/.well-known/openid-configuration"
     async with httpx.AsyncClient() as http:
-        discovery = await http.get(f"{issuer}/.well-known/openid-configuration")
+        discovery = await http.get(discovery_url)
         discovery.raise_for_status()
         token_url = discovery.json()["token_endpoint"]
 
