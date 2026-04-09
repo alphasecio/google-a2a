@@ -68,15 +68,7 @@ async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_s
         )
         if not resp.is_success:
             raise RuntimeError(f"Token request failed ({resp.status_code}): {resp.text}")
-        #return resp.json()["access_token"]
-        token = resp.json()["access_token"]
-        import base64, json as _json
-        payload = token.split(".")[1]
-        payload += "=" * (4 - len(payload) % 4)
-        claims = _json.loads(base64.b64decode(payload))
-        st.session_state["debug_token_aud"] = claims.get("aud")
-        st.session_state["debug_token_iss"] = claims.get("iss")
-        return token
+        return resp.json()["access_token"]
 
 async def fetch_cards(url: str, token: str | None):
     async with httpx.AsyncClient() as http:
@@ -109,10 +101,6 @@ if "active_token" not in st.session_state:
     st.session_state.active_token = None
 if "last_auth_method" not in st.session_state:
     st.session_state.last_auth_method = "None"
-
-if "debug_token_aud" in st.session_state:
-    st.sidebar.write(f"token aud: '{st.session_state.debug_token_aud}'")
-    st.sidebar.write(f"token iss: '{st.session_state.debug_token_iss}'")
 
 with st.sidebar:
     st.title("💬 A2A Chatbot")
