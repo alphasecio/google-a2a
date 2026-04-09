@@ -50,6 +50,8 @@ def make_request(text: str, token: str | None = None) -> SendMessageRequest:
     )
 
 async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_secret: str, scope=None) -> str:
+    effective_scope = scope if scope else f"{audience}/.default"
+    st.sidebar.write(f"DEBUG scope: '{effective_scope}'", flush=True)
     discovery_url = issuer.rstrip("/") + "/.well-known/openid-configuration"
     async with httpx.AsyncClient() as http:
         discovery = await http.get(discovery_url)
