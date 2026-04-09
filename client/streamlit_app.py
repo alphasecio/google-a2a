@@ -49,7 +49,7 @@ def make_request(text: str, token: str | None = None) -> SendMessageRequest:
         ),
     )
 
-async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_secret: str) -> str:
+async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_secret: str, scope=None) -> str:
     discovery_url = issuer.rstrip("/") + "/.well-known/openid-configuration"
     async with httpx.AsyncClient() as http:
         discovery = await http.get(discovery_url)
@@ -62,7 +62,7 @@ async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_s
                 "grant_type": "client_credentials",
                 "client_id": client_id,
                 "client_secret": client_secret,
-                "scope": f"{audience}/.default",
+                "scope": scope if scope else f"{audience}/.default",
             },
         )
         if not resp.is_success:
@@ -155,6 +155,11 @@ with st.sidebar:
                 "Client Secret",
                 value=os.environ.get("OAUTH_CLIENT_SECRET", ""),
                 type="password",
+            )
+            oauth_scope = st.text_input(
+                "Scope",
+                value=os.environ.get("OAUTH_SCOPE", ""),
+                placeholder="leave blank to use audience/.default",
             )
         else:
             oauth_issuer = oauth_audience = oauth_client_id = oauth_client_secret = None
