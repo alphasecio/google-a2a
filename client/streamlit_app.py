@@ -162,7 +162,7 @@ with st.sidebar:
                 placeholder="leave blank to use audience/.default",
             )
         else:
-            oauth_issuer = oauth_audience = oauth_client_id = oauth_client_secret = None
+            oauth_issuer = oauth_audience = oauth_client_id = oauth_client_secret = oauth_scope = None
 
         col1, col2 = st.columns(2)
         with col1:
@@ -222,7 +222,7 @@ if connect_btn:
                     st.error(f"Missing OAuth fields: {', '.join(missing)}")
                     st.stop()
                 token = asyncio.run(
-                    fetch_oauth_token(oauth_issuer, oauth_audience, oauth_client_id, oauth_client_secret)
+                    fetch_oauth_token(oauth_issuer, oauth_audience, oauth_client_id, oauth_client_secret, oauth_scope)
                 )
                 
             public_card, extended_card = asyncio.run(fetch_cards(server_url, token))
