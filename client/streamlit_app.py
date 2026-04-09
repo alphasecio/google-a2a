@@ -58,12 +58,11 @@ async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_s
 
         resp = await http.post(
             token_url,
-            json={
+            data={
                 "grant_type": "client_credentials",
                 "client_id": client_id,
                 "client_secret": client_secret,
-                "audience": audience,              # Auth0
-                "scope": f"{audience}/.default",   # Entra
+                "scope": f"{audience}/.default",
             },
         )
         
