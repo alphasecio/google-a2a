@@ -35,7 +35,14 @@ class HelloAgentExecutor(AgentExecutor):
 
         if user_text.startswith("roll"):
             token = auth_token_var.get().removeprefix("Bearer ").strip()
-
+            if not token:
+                auth_header = (
+                    (context.metadata or {}).get("Authorization")
+                    or (context.metadata or {}).get("authorization")
+                    or ""
+                )
+                token = auth_header.removeprefix("Bearer ").strip()
+                
             if not token:
                 await event_queue.enqueue_event(
                     new_agent_text_message("❌ Unauthorized: missing Bearer token.")
