@@ -50,8 +50,12 @@ def make_request(text: str, token: str | None = None) -> SendMessageRequest:
     )
 
 async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_secret: str) -> str:
-    token_url = f"{issuer.rstrip('/')}/oauth/token"
+    issuer = issuer.rstrip("/")
     async with httpx.AsyncClient() as http:
+        discovery = await http.get(f"{issuer}/.well-known/openid-configuration")
+        discovery.raise_for_status()
+        token_url = discovery.json()["token_endpoint"]
+
         resp = await http.post(
             token_url,
             json={
