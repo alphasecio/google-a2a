@@ -82,7 +82,6 @@ async def fetch_cards(url: str, token: str | None):
         return public_card, extended_card
 
 async def send_message(text: str, token: str | None) -> str:
-    st.sidebar.write(f"DEBUG token in send_message: '{token}'")
     async with httpx.AsyncClient() as http:
         card = st.session_state.get("extended_card") or st.session_state.agent_card
         client = A2AClient(httpx_client=http, agent_card=card)
@@ -247,7 +246,6 @@ if prompt := st.chat_input("Type your message…"):
     if not st.session_state.connected:
         st.warning("Provide the agent URL in the sidebar and click **Connect** to start chatting.")
     else:
-        st.sidebar.write(f"DEBUG active_token at chat: '{st.session_state.active_token}'")
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
