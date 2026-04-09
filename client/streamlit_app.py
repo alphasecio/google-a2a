@@ -51,7 +51,7 @@ def make_request(text: str, token: str | None = None) -> SendMessageRequest:
 
 async def fetch_oauth_token(issuer: str, audience: str, client_id: str, client_secret: str, scope=None) -> str:
     effective_scope = scope if scope else f"{audience}/.default"
-    st.sidebar.write(f"DEBUG scope: '{effective_scope}'")
+    st.session_state["debug_scope"] = effective_scope
     discovery_url = issuer.rstrip("/") + "/.well-known/openid-configuration"
     async with httpx.AsyncClient() as http:
         discovery = await http.get(discovery_url)
@@ -102,6 +102,9 @@ if "active_token" not in st.session_state:
     st.session_state.active_token = None
 if "last_auth_method" not in st.session_state:
     st.session_state.last_auth_method = "None"
+
+if "debug_scope" in st.session_state:
+    st.sidebar.write(f"DEBUG scope: '{st.session_state.debug_scope}'")
 
 with st.sidebar:
     st.title("💬 A2A Chatbot")
